@@ -7,18 +7,21 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Setup Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
+print("PYTHONPATH:", sys.path)
+print("Trying to import:", os.environ['DJANGO_SETTINGS_MODULE'])
 django.setup()
 
 from relationship_app.models import Author, Book, Library, Librarian
 
 def run_queries():
+    # Query all books by a specific author (e.g., Author with id=1)
     author = Author.objects.get(id=1)
     print(f"Books by {author.name}:")
     for book in author.books.all():
         print(f" - {book.title}")
 
-    library_name = "My Library" 
-    library = Library.objects.get(name=library_name)
+    # List all books in a library (e.g., Library with id=1)
+    library = Library.objects.get(id=1)
     print(f"\nBooks in library '{library.name}':")
     for book in library.books.all():
         print(f" - {book.title}")
