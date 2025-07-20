@@ -20,18 +20,6 @@ def run_queries():
     for book in books:
         print(f" - {book.title}")
 
-    # List all books in a library by name
-    library_name = "Main Library"  # Replace with a real library name in your DB
-    library = Library.objects.get(name=library_name)
-    print(f"\nBooks in library '{library.name}':")
-    for book in library.books.all():
-        print(f" - {book.title}")
-
-    # Retrieve the librarian for a library
-    librarian = library.librarian
-    print(f"\nLibrarian of '{library.name}': {librarian.name}")
-
-
     library_name = "My Library" 
     library = Library.objects.get(name=library_name)
     print(f"\nBooks in library '{library.name}':")
@@ -39,8 +27,10 @@ def run_queries():
         print(f" - {book.title}")
 
     # Retrieve the librarian for a library
-    librarian = library.librarian
+    # Retrieve the librarian for a specific library directly
+    librarian = Librarian.objects.get(library=library)
     print(f"\nLibrarian of '{library.name}': {librarian.name}")
+
 
 if __name__ == '__main__':
     run_queries()
