@@ -57,8 +57,9 @@ def logout_view(request):
 
 # 🔹 Function-Based View: List all books
 def list_books(request):
-    books = Book.objects.select_related('author').all()
+    books = Book.objects.all()  
     return render(request, 'relationship_app/list_books.html', {'books': books})
+
 
 # 🔹 Class-Based View: Show library details and its books
 class LibraryDetailView(DetailView):
