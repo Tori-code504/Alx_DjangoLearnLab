@@ -19,7 +19,7 @@ def register_view(request):
     return render(request, 'bookshelf/register.html', {'form': form})
 
 @permission_required('bookshelf.can_view', raise_exception=True)
-def list_books(request):
+def book_list(request):
     books = Book.objects.all()
     return render(request, 'bookshelf/list_books.html', {'books': books})
 
