@@ -26,12 +26,19 @@ SECRET_KEY = 'django-insecure-z(p^j^hyow#*=gc0pam#)-l5%=1$1h10l8%&@y7r5n!kla_1q)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ✅ Additional security settings
+# Additional security settings
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
-# ✅ Cookies sent only over HTTPS (use HTTPS in deployment)
+# Content Security Policy settings
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://cdnjs.cloudflare.com')
+CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
+CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com')
+
+
+# Cookies sent only over HTTPS (use HTTPS in deployment)
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
@@ -50,9 +57,11 @@ INSTALLED_APPS = [
     'bookshelf',
     'relationship_app',
     'accounts',
+    'csp',
 ]
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
