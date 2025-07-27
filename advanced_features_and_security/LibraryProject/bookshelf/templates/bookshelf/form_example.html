@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure Example Form</title>
+</head>
+<body>
+    <h1>Submit Your Information</h1>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <p>
+            {{ form.name.label_tag }}<br>
+            {{ form.name }}
+            {{ form.name.errors }}
+        </p>
+        <p>
+            {{ form.email.label_tag }}<br>
+            {{ form.email }}
+            {{ form.email.errors }}
+        </p>
+        <p>
+            {{ form.message.label_tag }}<br>
+            {{ form.message }}
+            {{ form.message.errors }}
+        </p>
+        <button type="submit">Submit</button>
+    </form>
+
+    <p><a href="{% url 'list_books' %}">Back to Book List</a></p>
+</body>
+</html>
