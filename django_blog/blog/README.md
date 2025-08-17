@@ -16,3 +16,13 @@
 - `LoginRequiredMixin` prevents unauthenticated creation/edits.
 - `UserPassesTestMixin` ensures only the author can edit/delete.
 - Messages provide user feedback on create/update/delete.
+
+## Comment System
+- **View comments:** Everyone can read comments under posts.
+- **Add comment:** Authenticated users only. Form is shown under each post.
+- **Edit/Delete comment:** Only the comment’s author.
+- **URLs:**
+  - Add: `/posts/<post_id>/comments/new/`
+  - Edit: `/comments/<comment_id>/update/`
+  - Delete: `/comments/<comment_id>/delete/`
+

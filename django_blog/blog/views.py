@@ -8,6 +8,10 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import PostForm
 from .models import Post
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect
+from .models import Post, Comment
+from .forms import CommentForm
 
 def register_view(request):
     if request.method == 'POST':
@@ -82,3 +86,50 @@ class PostDeleteView(LoginRequiredMixin, AuthorRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, "Post deleted.")
         return super().delete(request, *args, **kwargs)
+
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        post = get_object_or_404(Post, pk=self.kwargs["pk"])
+        form.instance.post = post
+        messages.success(self.request, "Your comment was added.")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "blog/comment_form.html"
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
+
+    def form_valid(self, form):
+        messages.success(self.request, "Your comment was updated.")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = "blog/comment_confirm_delete.html"
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Your comment was deleted.")
+        return super().delete(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
