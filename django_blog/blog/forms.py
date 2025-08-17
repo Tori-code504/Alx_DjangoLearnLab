@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Post
+from .models import Post, Tag
 from .models import Comment
 
 class RegisterForm(UserCreationForm):
@@ -19,7 +19,24 @@ class PostForm(forms.ModelForm):
             "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Post title"}),
             "content": forms.Textarea(attrs={"class": "form-control", "rows": 8, "placeholder": "Write your post..."}),
         }
+        tags = forms.CharField(required=False, help_text="Add tags separated by commas")
 
+        class Meta:
+            model = Post
+            fields = ['title', 'content', 'tags']
+
+        def save(self, commit=True):
+            post = super().save(commit=False)
+            if commit:
+                post.save()
+            tags_str = self.cleaned_data['tags']
+            if tags_str:
+                tag_names = [name.strip() for name in tags_str.split(',')]
+                for name in tag_names:
+                    tag, created = Tag.objects.get_or_create(name=name)
+                    post.tags.add(tag)
+            return post 
+     
     def clean_title(self):
         title = self.cleaned_data["title"].strip()
         if not title:
@@ -37,3 +54,8 @@ class CommentForm(forms.ModelForm):
                 "placeholder": "Write your comment..."
             })
         }
+
+
+    
+
+    

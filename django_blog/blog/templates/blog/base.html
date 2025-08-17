@@ -19,12 +19,31 @@
     </div>
   </div>
 </nav>
+<form method="get" action="{% url 'search' %}">
+  <input type="text" name="q" placeholder="Search posts...">
+  <button type="submit">Search</button>
+</form>
+<h2>Search Results for "{{ query }}"</h2>
+{% for post in results %}
+  <h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
+{% empty %}
+  <p>No results found.</p>
+{% endfor %}
+
+<h2>Posts tagged with "{{ tag.name }}"</h2>
+{% for post in posts %}
+  <h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
+{% empty %}
+  <p>No posts with this tag.</p>
+{% endfor %}
 
 <main class="container">
   {% for message in messages %}
     <div class="alert alert-{{ message.tags }} mb-3">{{ message }}</div>
   {% endfor %}
-  {% block content %}{% endblock %}
 </main>
+{% endblock %}
+
+
 </body>
 </html>

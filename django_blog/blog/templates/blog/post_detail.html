@@ -23,7 +23,7 @@
     <div style="white-space: pre-wrap;">{{ post.content }}</div>
   </div>
 </article>
-
+ 
 <!-- Comments Section -->
 <h2 class="h5 mt-4">Comments</h2>
 {% for comment in post.comments.all %}
@@ -53,6 +53,13 @@
 {% endif %}
 
 <a class="btn btn-link mt-3" href="{% url 'blog:post_list' %}">← Back to posts</a>
+<p>Tags:
+  {% for tag in post.tags.all %}
+    <a href="{% url 'tag_posts' tag.name %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+  {% empty %}
+    No tags
+  {% endfor %}
+</p>
 
 {% endblock %}
 
