@@ -148,7 +148,7 @@ def search_view(request):
 
 def tag_view(request, tag_name):
     tag = get_object_or_404(Tag, name=tag_name)
-    posts = tag.posts.all()
+    posts = Post.objects.filter(tags=tag)
     return render(request, 'blog/tag_posts.html', {'tag': tag, 'posts': posts})
 
 
