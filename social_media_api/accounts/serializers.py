@@ -22,12 +22,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ["username", "email", "password", "token"]
 
     def create(self, validated_data):
-        user = User.objects.create_user(
+        user = get_user_model().objects.create_user(
             username=validated_data["username"],
             email=validated_data["email"],
             password=validated_data["password"]
         )
-        token, _ = Token.objects.get_or_create(user=user)
+        token = Token.objects.create(user=user)
         user.token = token.key  # attach token so it can be returned
         return user
 
@@ -41,7 +41,8 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         user = authenticate(**data)
         if user and user.is_active:
-            token, _ = Token.objects.get_or_create(user=user)
+            Token.objects.filter(user=user).delete() 
+            token = Token.objects.create(user=user)
             return {
                 "username": user.username,
                 "email": user.email,
