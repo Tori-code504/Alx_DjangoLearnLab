@@ -8,7 +8,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from notifications.models import Notification
 from rest_framework import status
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404 as get_object_or_404
+from rest_framework import generics
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -56,10 +58,12 @@ def user_feed(request):
     serializer = PostSerializer(posts, many=True)
     return Response(serializer.data)
 
+generics.get_object_or_404 = get_object_or_404
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     like, created = Like.objects.get_or_create(user=request.user, post=post)
 
     if not created:
@@ -80,7 +84,7 @@ def like_post(request, pk):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def unlike_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     try:
         like = Like.objects.get(user=request.user, post=post)
         like.delete()
