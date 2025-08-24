@@ -4,6 +4,10 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from .models import CustomUser
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
+from rest_framework import generics
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Registration
 class RegisterView(generics.CreateAPIView):
